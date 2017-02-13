@@ -7,10 +7,9 @@ public class ProjectileController : MonoBehaviour {
 	public GameObject objParent;
 	public SpriteRenderer objSprite;
 	public Rigidbody2D projectile;
-	public Rigidbody2D projectileClone;
 	private Vector3 move;
 	public int speed;
-	public float Force;
+	public Rigidbody2D prefab;
 
 	// Use this for initialization
 	void Start () {
@@ -20,8 +19,11 @@ public class ProjectileController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			Vector3 move = new Vector3 (transform.position.x, transform.position.y, 0.0f);
-			transform.position -= move * speed * Time.deltaTime;
+			if (this.objParent.name == "Student") {
+				projectile.velocity = new Vector2 (10.0f, 0.0f);
+				this.transform.parent = null;
+				clone ();
+			}
 		}
 	}
 
@@ -30,17 +32,14 @@ public class ProjectileController : MonoBehaviour {
 		this.transform.parent = objParent.transform;
 		this.transform.position = objParent.transform.position;
 		objSprite.flipX = true;
-		clone ();
+		//clone ();
 	}
 
 	void clone() {
-		projectileClone = (Rigidbody2D)Instantiate (projectile, transform.position, transform.rotation);
+		Rigidbody2D projectileClone = (Rigidbody2D) Instantiate (prefab, transform.position, transform.rotation);
 		projectileClone.transform.position = new Vector3 (-7.25f, 3.41f, 0.0f);	
 	}
-//
-//	void throwProj(){
-//		projectile.AddForce (new Vector2(speed * Time.deltaTime, 0.0f), Force);
-//	}
+
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.CompareTag ("Books")) {

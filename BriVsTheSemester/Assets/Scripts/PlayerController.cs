@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioSource fallingSound;
 	private SpriteRenderer playerSprite;
 	public Text scoreDisplay;
+	public Rigidbody2D proj;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +30,9 @@ public class PlayerController : MonoBehaviour {
 			playerSprite.flipX = true;
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			playerSprite.flipX = false;
+		}
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			proj.velocity = new Vector2(10.0f,0.0f);
 		}
 	}
 		
