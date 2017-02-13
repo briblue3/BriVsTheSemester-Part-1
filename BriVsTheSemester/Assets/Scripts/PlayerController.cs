@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
@@ -9,12 +10,14 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 move;
 	public AudioSource fallingSound;
 	private SpriteRenderer playerSprite;
+	public Text scoreDisplay;
 
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<Rigidbody2D> ();
 		playerSprite = GetComponent<SpriteRenderer> ();
 		transform.position = new Vector3 (-8.79f, 0.0f, 0.0f);
+		scoreDisplay.text = "Score: 0";
 	}
 	
 	// Update is called once per frame after everything else renders
