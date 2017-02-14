@@ -9,9 +9,12 @@ public class FlyingBookGenerator : MonoBehaviour {
 	public int frameDelta;	// initially set to 250 in Unity
 	private int counter;
 	public Text waveText;
-	private int wave;
+	public int wave;
 	public Image winPanel;
+	public Text winText;
 	private int maxBooks;
+	private FieldController field;
+	public AudioSource winMusic;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +22,7 @@ public class FlyingBookGenerator : MonoBehaviour {
 		wave = 0;
 		waveText.text = "Wave: " + wave;
 		winPanel.enabled = false;
+		winText.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -41,7 +45,12 @@ public class FlyingBookGenerator : MonoBehaviour {
 				}
 			} else if (wave == 16) {
 				winPanel.enabled = true;
-
+				winText.enabled = true;
+				field.backgroundMusic.Stop ();
+				winMusic.Play ();
+				if (counter % (frameDelta * 2) == 0) {
+					Application.Quit ();
+				}
 			}
 		}
 	}

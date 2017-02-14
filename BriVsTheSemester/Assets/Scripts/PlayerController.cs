@@ -9,23 +9,34 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	private Vector3 move;
 	private SpriteRenderer playerSprite;
+	public AudioSource ouchImpact;
 
 	public Text scoreDisplay;
 	public int score;
+	private GameObject background;
+	private FieldController field;
 	public Image losePanel;
+	public Text endText;
 	public Text hitPoints;
 	public int hits;
+	private int count;
+	private int endCount;
 
 	// Use this for initialization
 	void Start () {
+		background = GameObject.Find("Background");
+		field = background.GetComponent<FieldController>();
 		player = GetComponent<Rigidbody2D> ();
 		playerSprite = GetComponent<SpriteRenderer> ();
 		transform.position = new Vector3 (-8.79f, 0.0f, 0.0f);
 		score = 0;
 		scoreDisplay.text = "Score: " + score;
-		losePanel.enabled = false;
 		hits = 5;
 		hitPoints.text = "Hit Points: " + hits;
+		losePanel.enabled = false;
+		endText.enabled = false;
+		count = 0;
+		endCount = 500;
 	}
 	
 	// Update is called once per frame after everything else renders
@@ -43,10 +54,20 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		// Debug.Log ("Collided");
 		if (other.gameObject.CompareTag ("Books")) {
-			other.GetComponent<AudioSource> ().Play ();
 			hits = hits - 1;
 			hitPoints.text = "Hit Points: " + hits;
 			Destroy (other.gameObject);
+			if (hits > 0) {
+				ouchImpact.Play ();
+			} else if (hits == 0) {
+				losePanel.enabled = true;
+				endText.enabled = true;
+				field.backgroundMusic.Stop ();
+				field.gameOverSound.Play ();
+				if (count % endCount == 0) {
+					Application.Quit ();
+				}
+			}
 		}
 	}
 }
