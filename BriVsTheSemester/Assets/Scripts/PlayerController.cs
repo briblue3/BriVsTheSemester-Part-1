@@ -8,17 +8,24 @@ public class PlayerController : MonoBehaviour {
 	public Rigidbody2D player;
 	public float speed;
 	private Vector3 move;
-	public AudioSource fallingSound;
 	private SpriteRenderer playerSprite;
+
 	public Text scoreDisplay;
-	public Rigidbody2D proj;
+	public int score;
+	public Image losePanel;
+	public Text hitPoints;
+	public int hits;
 
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<Rigidbody2D> ();
 		playerSprite = GetComponent<SpriteRenderer> ();
 		transform.position = new Vector3 (-8.79f, 0.0f, 0.0f);
-		scoreDisplay.text = "Score: 0";
+		score = 0;
+		scoreDisplay.text = "Score: " + score;
+		losePanel.enabled = false;
+		hits = 5;
+		hitPoints.text = "Hit Points: " + hits;
 	}
 	
 	// Update is called once per frame after everything else renders
@@ -31,15 +38,14 @@ public class PlayerController : MonoBehaviour {
 		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 			playerSprite.flipX = false;
 		}
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			proj.velocity = new Vector2(10.0f,0.0f);
-		}
 	}
 		
 	void OnTriggerEnter2D(Collider2D other) {
 		// Debug.Log ("Collided");
 		if (other.gameObject.CompareTag ("Books")) {
-			fallingSound.Play ();
+			other.GetComponent<AudioSource> ().Play ();
+			hits = hits - 1;
+			hitPoints.text = "Hit Points: " + hits;
 			Destroy (other.gameObject);
 		}
 	}

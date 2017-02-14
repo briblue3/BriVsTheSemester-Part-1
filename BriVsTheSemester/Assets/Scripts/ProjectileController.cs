@@ -10,10 +10,15 @@ public class ProjectileController : MonoBehaviour {
 	private Vector3 move;
 	public int speed;
 	public Rigidbody2D prefab;
+	private GameObject thePlayer;
+	private PlayerController playerScript;
+	public AudioSource impact;
 
 	// Use this for initialization
 	void Start () {
 		objSprite = GetComponent<SpriteRenderer> ();
+		thePlayer = GameObject.Find("Student");
+		playerScript = thePlayer.GetComponent<PlayerController>();
 	}
 
 	// Update is called once per frame
@@ -32,7 +37,6 @@ public class ProjectileController : MonoBehaviour {
 		this.transform.parent = objParent.transform;
 		this.transform.position = objParent.transform.position;
 		objSprite.flipX = true;
-		//clone ();
 	}
 
 	void clone() {
@@ -43,7 +47,11 @@ public class ProjectileController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.CompareTag ("Books")) {
-			Destroy (other);
+			impact.Play ();
+			playerScript.score++;
+			playerScript.scoreDisplay.text = "Score: " + playerScript.score;
+			Destroy (gameObject);
+			Destroy (other.gameObject);
 		}
 	}
 }
