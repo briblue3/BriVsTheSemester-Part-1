@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class FieldController : MonoBehaviour {
 
+	// UI Components & AudioSources
 	public Text hallDamage;
 	public Image losePanel;
 	public Text endText;
@@ -12,11 +13,15 @@ public class FieldController : MonoBehaviour {
 	public AudioSource backgroundMusic;
 	public AudioSource gameOverSound;
 	private FlyingBookGenerator numWaves;
+
+	// used to count frames, to be used to quit game upon loss
 	private int count;
 	private int endCount;
 
 	// Use this for initialization
 	void Start () {
+		/* start playing background music, disable Losing screen, initialize
+		 * hallDamage text & damage count, set initial frame count & endCount */
 		backgroundMusic.Play ();
 		damage = 0;
 		hallDamage.text = "Hallway Damage: " + damage;
@@ -28,26 +33,28 @@ public class FieldController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		count++;
-		if (damage == 5) {
-			losePanel.enabled = true;
-			endText.enabled = true;
-			backgroundMusic.Stop ();
-			gameOverSound.Play ();
-			if (count % endCount == 0) {
-				Application.Quit ();
-			}
-		}
+		count++;	// increase frame count each frame
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		// Debug.Log ("Collided");
+		/* function destroys flying book if it reaches the edge of the playing field,
+		 * updates hallway damage. if hallDamage reaches 5, player loses, Lose screen
+		 * enabled, background music stopped & play losing music before quitting */
+
 		if (other.gameObject.CompareTag ("Books")) {
-			// destroy flying book if it reaches edge of playing field
 			other.GetComponent<AudioSource>().Play();
 			damage++;
 			hallDamage.text = "Hallway Damage: " + damage;
 			Destroy (other.gameObject, other.GetComponent<AudioSource>().clip.length);
+			if (damage == 5) {
+				losePanel.enabled = true;
+				endText.enabled = true;
+				backgroundMusic.Stop ();
+				gameOverSound.Play ();
+				if (count % endCount == 0) {
+					Application.Quit ();
+				}
+			}
 		}
 	}
 }
